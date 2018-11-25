@@ -6,7 +6,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-//import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 import PropTypes from 'prop-types';
 import React from 'react';
 import path from 'path';
@@ -15,19 +15,6 @@ import oxygenIntellisense from './intellisense';
 import * as helpers from './helpers';
 import onDidChangeModelContent from './onDidChangeModelContent';
 import onDidChangeCursorSelection from './onDidChangeCursorSelection';
-
-// load Monaco Editor module
-function uriFromPath(_path) {
-  let pathName = path.resolve(_path).replace(/\\/g, '/');
-  if (pathName.length > 0 && pathName.charAt(0) !== '/') {
-    pathName = `/${pathName}`;
-  }
-  return encodeURI(`file://${pathName}`);
-}
-amdRequire.config({
-  ignoreDuplicateModules: 'vs/editor/editor.main',
-  baseUrl: uriFromPath(path.join(__dirname, '../node_modules/monaco-editor/min'))
-});
 
 function noop() {}
 
@@ -59,9 +46,7 @@ export default class MonacoEditor extends React.Component {
   }
 
   componentDidMount() {
-    amdRequire(['vs/editor/editor.main'], () => {
-      this.initMonaco();
-    });
+    this.initMonaco();
   }
 
   shouldComponentUpdate(nextProps, nextState) {    

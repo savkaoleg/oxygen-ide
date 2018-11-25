@@ -7,10 +7,8 @@
  * (at your option) any later version.
  */
 import docs from './doc';
-
+import * as monaco from 'monaco-editor';
 const intellisenseJson = docs.init();
-
-// console.log(intellisenseJson);
 
 const createModuleAndMethods = (jsonData) => { // eslint-disable-line
   let methodArr = [];
@@ -85,8 +83,6 @@ const arrdata = createModuleAndMethods(intellisenseJson);
 
 export default function () {
   monaco.languages.typescript.javascriptDefaults.addExtraLib(
-    arrdata.join('\n'),
-    // , 'filename/webfunc.d.ts'
+    arrdata.join('\n')
   );
 }
-

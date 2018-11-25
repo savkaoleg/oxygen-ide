@@ -5,9 +5,11 @@
 import path from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
@@ -22,7 +24,7 @@ export default merge.smart(baseConfig, {
 
   output: {
     path: path.join(__dirname, 'app/dist'),
-    publicPath: '',
+    publicPath: path.join(__dirname, 'app/dist'),
     filename: 'renderer.prod.js'
   },
 
@@ -45,6 +47,7 @@ export default merge.smart(baseConfig, {
       // Pipe other styles through css modules and append to style.css
       {
         test: /^((?!\.global).)*\.css$/,
+        exclude: /monaco-editor/,
         use: ExtractTextPlugin.extract({
           use: {
             loader: 'css-loader',
@@ -55,6 +58,24 @@ export default merge.smart(baseConfig, {
           }
         }),
       },
+
+
+      {
+        test: /^.*monaco-editor(\\|\/).*\.css$/,
+
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // you can specify a publicPath here
+              // by default it use publicPath in webpackOptions.output
+              publicPath: '../dist/'
+            }
+          },
+          "css-loader"
+        ]
+      },
+
       // Add SASS support  - compile all .global.scss files and pipe it to style.css
       {
         test: /\.global\.(scss|sass)$/,
@@ -128,9 +149,57 @@ export default merge.smart(baseConfig, {
 
     new ExtractTextPlugin('style.css'),
 
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "style.css",
+     // chunkFilename: "[id].css"
+    }),
+
     new BundleAnalyzerPlugin({
       analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true'
     }),
+
+    new MonacoWebpackPlugin({
+      output: '../dist/',
+      languages: ['javascript', 'typescript', 'html', 'yaml'],
+      features: ['bracketMatching',
+                'caretOperations',
+                'clipboard',
+                'codeAction',
+                'codelens',
+                'comment',
+                'contextmenu',
+                'coreCommands',
+                'cursorUndo',
+                'dnd',
+                'find',
+                'folding',
+                'fontZoom',
+                'format',
+                'goToDefinitionCommands',
+                'goToDefinitionMouse',
+                'gotoError',
+                'gotoLine',
+                'hover',
+                'inPlaceReplace',
+                'inspectTokens',
+                'linesOperations',
+                'links',
+                'parameterHints',
+                'quickCommand',
+                'quickOutline',
+                'referenceSearch',
+                'rename',
+                'smartSelect',
+                'snippets',
+                'suggest',
+                'toggleTabFocusMode',
+                'transpose',
+                'wordHighlighter',
+                'wordOperations',
+                'wordPartOperations']
+    })
   ],
 });

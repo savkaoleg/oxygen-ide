@@ -15,6 +15,7 @@ import merge from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
@@ -249,6 +250,46 @@ export default merge.smart(baseConfig, {
     new MiniCssExtractPlugin({
       filename: '[name].css'
     }),
+
+    new MonacoWebpackPlugin({
+      languages: ['javascript', 'typescript', 'html', 'yaml'],
+      features: ['bracketMatching',
+                'caretOperations',
+                'clipboard',
+                'codeAction',
+                'codelens',
+                'comment',
+                'contextmenu',
+                'coreCommands',
+                'cursorUndo',
+                'dnd',
+                'find',
+                'folding',
+                'fontZoom',
+                'format',
+                'goToDefinitionCommands',
+                'goToDefinitionMouse',
+                'gotoError',
+                'gotoLine',
+                'hover',
+                'inPlaceReplace',
+                'inspectTokens',
+                'linesOperations',
+                'links',
+                'parameterHints',
+                'quickCommand',
+                'quickOutline',
+                'referenceSearch',
+                'rename',
+                'smartSelect',
+                'snippets',
+                'suggest',
+                'toggleTabFocusMode',
+                'transpose',
+                'wordHighlighter',
+                'wordOperations',
+                'wordPartOperations']
+    })
   ],
 
   node: {

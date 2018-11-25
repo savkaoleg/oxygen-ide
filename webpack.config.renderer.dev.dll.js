@@ -8,6 +8,7 @@ import merge from 'webpack-merge';
 import baseConfig from './webpack.config.base';
 import { dependencies } from './package.json';
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 CheckNodeEnv('development');
 
@@ -48,13 +49,26 @@ export default merge.smart(baseConfig, {
         }
       },
 
-
       // @STYLES starts
       {
         // doesn't contains module keyword
         // also is using for global and imports
         test: /^((?!\.module).)*\.css$/,
         exclude: /node_modules/,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          }
+        ]
+      },
+      {
+        test: /^.*monaco-editor(\\|\/).*\.css$/,
         use: [
           {
             loader: 'style-loader'
@@ -200,6 +214,7 @@ export default merge.smart(baseConfig, {
           && dependency !== 'react-icons'
           && dependency !== 'adbkit'
           && dependency !== 'antd'
+          && dependency !== 'monaco-editor'
         )
     )
   },
@@ -239,5 +254,45 @@ export default merge.smart(baseConfig, {
         },
       },
     }),
+
+    new MonacoWebpackPlugin({
+      languages: ['javascript', 'typescript', 'html', 'yaml'],
+      features: ['bracketMatching',
+                'caretOperations',
+                'clipboard',
+                'codeAction',
+                'codelens',
+                'comment',
+                'contextmenu',
+                'coreCommands',
+                'cursorUndo',
+                'dnd',
+                'find',
+                'folding',
+                'fontZoom',
+                'format',
+                'goToDefinitionCommands',
+                'goToDefinitionMouse',
+                'gotoError',
+                'gotoLine',
+                'hover',
+                'inPlaceReplace',
+                'inspectTokens',
+                'linesOperations',
+                'links',
+                'parameterHints',
+                'quickCommand',
+                'quickOutline',
+                'referenceSearch',
+                'rename',
+                'smartSelect',
+                'snippets',
+                'suggest',
+                'toggleTabFocusMode',
+                'transpose',
+                'wordHighlighter',
+                'wordOperations',
+                'wordPartOperations']
+    })
   ],
 });

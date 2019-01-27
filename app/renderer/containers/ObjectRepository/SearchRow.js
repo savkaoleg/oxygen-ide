@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Input } from 'antd';
-import '../../css/search-row.scss';
+import '../../css/search-row.scss';  // for tests need to comment this;\
 
 const check = (treeItem, searchQuery) => {
   if(treeItem && treeItem.name && searchQuery){
@@ -110,7 +110,8 @@ export default class SearchRow extends PureComponent<Props> {
       return (
         <div className={ 'search-row' }>
           <Input 
-            ref={this.inputRef} 
+            name={ 'search' }
+            ref={ this.inputRef } 
             addonAfter={ controls }
             value={ searchQuery }
             onChange={ this.onChange }

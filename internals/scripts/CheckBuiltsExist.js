@@ -3,6 +3,10 @@
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
+import Enzyme from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
+
+Enzyme.configure({ adapter: new Adapter() })
 
 function CheckBuildsExist() {
   const mainPath = path.join(__dirname, '..', '..', 'app', 'main', 'main.prod.js');

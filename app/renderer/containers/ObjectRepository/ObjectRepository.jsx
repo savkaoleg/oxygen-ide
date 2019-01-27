@@ -14,6 +14,7 @@ import FlexColumn from '../../components/core/FlexColumn';
 import Panel from '../../components/Panel';
 import ScrollContainer from '../../components/ScrollContainer';
 import ObjectTree from './ObjectTree';
+import SearchRow from './SearchRow';
 import ObjectEditor from './ObjectEditor';
 
 type Props = {
@@ -22,7 +23,14 @@ type Props = {
 };
 
 export default class ObjectRepository extends PureComponent<Props> {
-  props: Props;
+    constructor(props: Props) {
+        super(props: Props);
+        this.state = {
+            searchResults: []
+        };
+
+        this.inputRef = React.createRef();
+    }
 
   static Container = styled(FlexColumn)(props => ({
     height: '100vh',
@@ -35,6 +43,12 @@ export default class ObjectRepository extends PureComponent<Props> {
     this.props.setActive(path);
   }
 
+  setSearchResults = searchResults => {
+    this.setState({
+        searchResults: searchResults
+    })
+  }
+  
   render() {
       const { tree, active, name, selectedObject, setActive } = this.props;
       let repoPanelTitle = 'Repository';
@@ -54,7 +68,12 @@ export default class ObjectRepository extends PureComponent<Props> {
                 scrollRefresh={ this.props.refreshScroll }
                 scrollVerticalOnly
             >
+                <SearchRow
+                    setSearchResults={ this.setSearchResults }
+                    tree={ tree }
+                />
                 <ObjectTree
+                    searchResults= { this.state.searchResults }
                     tree={ tree }
                     active={ active }
                     onSelect={ (path) => setActive(path) }
